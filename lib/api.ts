@@ -7,6 +7,13 @@ interface OpenMeteoWeatherResponse {
     temperature_2m: number[];
     shortwave_radiation: number[];
     wind_speed_10m: number[];
+    relative_humidity_2m: number[];
+    uv_index: number[];
+  };
+  daily: {
+    time: string[];
+    temperature_2m_max: number[];
+    weather_code: number[];
   };
   current_weather?: {
     temperature: number;
@@ -33,13 +40,14 @@ const TORONTO_COORDS = {
   long: -79.3832,
 };
 
-export async function fetchWeather(): Promise<OpenMeteoWeatherResponse> {
+export async function fetchWeather(lat: number, long: number): Promise<OpenMeteoWeatherResponse> {
   const params = new URLSearchParams({
-    latitude: TORONTO_COORDS.lat.toString(),
-    longitude: TORONTO_COORDS.long.toString(),
-    hourly: 'temperature_2m,shortwave_radiation,wind_speed_10m',
-    forecast_days: '1',
-    timezone: 'America/Toronto',
+    latitude: lat.toString(),
+    longitude: long.toString(),
+    hourly: 'temperature_2m,shortwave_radiation,wind_speed_10m,relative_humidity_2m,uv_index',
+    daily: 'temperature_2m_max,weather_code',
+    forecast_days: '6', // Fetch 6 days to ensure we have 5 future days including today
+    timezone: 'auto', // Auto-detect timezone based on coordinates
   });
 
   const response = await fetch(
@@ -53,12 +61,12 @@ export async function fetchWeather(): Promise<OpenMeteoWeatherResponse> {
   return response.json();
 }
 
-export async function fetchAirQuality(): Promise<OpenMeteoAirQualityResponse> {
+export async function fetchAirQuality(lat: number, long: number): Promise<OpenMeteoAirQualityResponse> {
   const params = new URLSearchParams({
-    latitude: TORONTO_COORDS.lat.toString(),
-    longitude: TORONTO_COORDS.long.toString(),
+    latitude: lat.toString(),
+    longitude: long.toString(),
     hourly: 'us_aqi',
-    timezone: 'America/Toronto',
+    timezone: 'auto',
   });
 
   const response = await fetch(

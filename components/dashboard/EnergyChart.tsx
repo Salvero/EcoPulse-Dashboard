@@ -11,31 +11,57 @@ import {
     Legend
 } from 'recharts';
 import { DashboardDataPoint } from '@/types/dashboard';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 
 interface EnergyChartProps {
     data: DashboardDataPoint[];
+    mode?: 'combined' | 'solar' | 'aqi';
+    className?: string;
 }
 
-export function EnergyChart({ data }: EnergyChartProps) {
+export function EnergyChart({ data, mode = 'combined', className }: EnergyChartProps) {
+    const { theme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) return <div className={`w-full ${className || 'h-[300px]'}`} />;
+
+    const showSolar = mode === 'combined' || mode === 'solar';
+    const showAQI = mode === 'combined' || mode === 'aqi';
+
+    const isDark = theme === 'dark';
+    const gridColor = isDark ? "#334155" : "#e2e8f0";
+    const textColor = isDark ? "#94a3b8" : "#64748b";
+    const tooltipBg = isDark ? "#1e293b" : "#ffffff";
+    const tooltipBorder = isDark ? "#334155" : "#e2e8f0";
+    const tooltipText = isDark ? "#f8fafc" : "#0f172a";
+
     return (
-        <div className="h-[400px] w-full">
+        <div className={`w-full ${className || 'h-[300px]'}`}>
             <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={data}>
                     <defs>
                         <linearGradient id="colorAQI" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8} />
-                            <stop offset="95%" stopColor="#ef4444" stopOpacity={0.1} />
+                            <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
+                            <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                        </linearGradient>
+                        <linearGradient id="colorSolar" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#eab308" stopOpacity={0.3} />
+                            <stop offset="95%" stopColor="#eab308" stopOpacity={0} />
                         </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
+                    <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
                     <XAxis
                         dataKey="timestamp"
-                        stroke="#888"
+                        stroke={textColor}
                         fontSize={12}
                         tickLine={false}
+                        axisLine={false}
                         tickFormatter={(value) => {
-                            // Value is ISO string "2024-11-25T10:00"
-                            // Return "10:00"
                             try {
                                 return value.split('T')[1].slice(0, 5);
                             } catch {
@@ -44,26 +70,35 @@ export function EnergyChart({ data }: EnergyChartProps) {
                         }}
                     />
                     {/* Left Y-Axis: Air Quality Index */}
-                    <YAxis
-                        yAxisId="left"
-                        stroke="#ef4444"
-                        fontSize={12}
-                        label={{ value: 'Air Quality Index (US AQI)', angle: -90, position: 'insideLeft', fill: '#ef4444' }}
-                    />
+                    {showAQI && (
+                        <YAxis
+                            yAxisId="left"
+                            stroke="#ef4444"
+                            fontSize={12}
+                            tickLine={false}
+                            axisLine={false}
+                            label={{ value: 'AQI', angle: -90, position: 'insideLeft', fill: '#ef4444', fontSize: 10 }}
+                        />
+                    )}
                     {/* Right Y-Axis: Solar Output */}
-                    <YAxis
-                        yAxisId="right"
-                        orientation="right"
-                        stroke="#eab308"
-                        fontSize={12}
-                        label={{ value: 'Solar Output (W/m²)', angle: 90, position: 'insideRight', fill: '#eab308' }}
-                    />
+                    {showSolar && (
+                        <YAxis
+                            yAxisId="right"
+                            orientation="right"
+                            stroke="#eab308"
+                            fontSize={12}
+                            tickLine={false}
+                            axisLine={false}
+                            label={{ value: 'W/m²', angle: 90, position: 'insideRight', fill: '#eab308', fontSize: 10 }}
+                        />
+                    )}
                     <Tooltip
-                        contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e5e7eb' }}
-                        labelStyle={{ color: '#374151', fontWeight: 'bold' }}
+                        contentStyle={{ backgroundColor: tooltipBg, borderRadius: '8px', border: `1px solid ${tooltipBorder}`, color: tooltipText }}
+                        itemStyle={{ color: tooltipText }}
+                        labelStyle={{ color: textColor, fontWeight: 'bold', marginBottom: '0.5rem' }}
                         formatter={(value: number, name: string) => {
-                            if (name === 'Air Quality Index') return [`${value} AQI`, name];
-                            if (name === 'Solar Output') return [`${value} W/m²`, name];
+                            if (name === 'Air Quality Index') return [`${value}`, 'AQI'];
+                            if (name === 'Solar Output') return [`${value} W/m²`, 'Solar'];
                             return [value, name];
                         }}
                         labelFormatter={(label) => {
@@ -74,27 +109,31 @@ export function EnergyChart({ data }: EnergyChartProps) {
                             }
                         }}
                     />
-                    <Legend />
+                    <Legend wrapperStyle={{ paddingTop: '10px' }} />
 
-                    <Area
-                        yAxisId="left"
-                        type="monotone"
-                        dataKey="airQualityIndex"
-                        name="Air Quality Index"
-                        fill="url(#colorAQI)"
-                        stroke="#ef4444"
-                        strokeWidth={2}
-                    />
-                    <Line
-                        yAxisId="right"
-                        type="monotone"
-                        dataKey="solarOutput"
-                        name="Solar Output"
-                        stroke="#eab308"
-                        strokeWidth={3}
-                        dot={false}
-                        activeDot={{ r: 6 }}
-                    />
+                    {showAQI && (
+                        <Area
+                            yAxisId="left"
+                            type="monotone"
+                            dataKey="airQualityIndex"
+                            name="Air Quality Index"
+                            fill="url(#colorAQI)"
+                            stroke="#ef4444"
+                            strokeWidth={2}
+                        />
+                    )}
+                    {showSolar && (
+                        <Line
+                            yAxisId="right"
+                            type="monotone"
+                            dataKey="solarOutput"
+                            name="Solar Output"
+                            stroke="#eab308"
+                            strokeWidth={2}
+                            dot={false}
+                            activeDot={{ r: 4, fill: '#eab308' }}
+                        />
+                    )}
                 </ComposedChart>
             </ResponsiveContainer>
         </div>

@@ -1,32 +1,29 @@
 import { useState, useEffect } from 'react';
 import { DashboardDataPoint } from '@/types/dashboard';
-import { normalizeData, generateMockData } from '@/lib/normalize';
+import { normalizeData, generateMockData, normalizeForecast, DailyForecast } from '@/lib/normalize';
 import { fetchWeather, fetchAirQuality } from '@/lib/api';
-import { WeatherData } from '@/lib/api/mockData'; // Keeping this for type safety if needed, or we can update types
 
 interface DashboardData {
     weather: {
         temperature: number;
-        humidity: number; // Open-Meteo doesn't give humidity easily in the simple call, we might need to calculate or fetch it. 
-        // Wait, the user request didn't explicitly ask for humidity, but the UI has it. 
-        // The user asked for "temperature_2m,shortwave_radiation,wind_speed_10m".
-        // I should probably just mock humidity or fetch it if possible. 
-        // Let's check the fetchWeather implementation. It fetches 'temperature_2m,shortwave_radiation,wind_speed_10m'.
-        // I'll add relative_humidity_2m to the fetch if I can, or just mock it for now to avoid breaking UI.
-        // Actually, I'll update fetchWeather to include humidity if I can, but I already wrote it.
-        // Let's just mock humidity or use a default for now, or update fetchWeather.
-        // The user didn't ask for humidity update, but "Wind Speed" card needs to be wired.
-        // Let's stick to what's available.
+        humidity: number;
         condition: string;
         windSpeed: number;
     };
     energyData: DashboardDataPoint[];
+    forecast: DailyForecast[];
 }
 
-export function useDashboardData() {
+export function useDashboardData(coordinates: { lat: number; long: number } = { lat: 43.6532, long: -79.3832 }) {
     const [data, setData] = useState<DashboardData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
+
+    // Reset data when coordinates change to show loading state
+    useEffect(() => {
+        setData(null);
+        setLoading(true);
+    }, [coordinates.lat, coordinates.long]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -34,8 +31,8 @@ export function useDashboardData() {
                 setLoading(true);
 
                 const [weatherRes, aqiRes] = await Promise.all([
-                    fetchWeather(),
-                    fetchAirQuality()
+                    fetchWeather(coordinates.lat, coordinates.long),
+                    fetchAirQuality(coordinates.lat, coordinates.long)
                 ]);
 
                 // Process Weather Data
@@ -46,6 +43,7 @@ export function useDashboardData() {
 
                 const currentTemp = weatherRes.hourly.temperature_2m[currentHourIndex];
                 const currentWind = weatherRes.hourly.wind_speed_10m[currentHourIndex];
+                const currentHumidity = weatherRes.hourly.relative_humidity_2m[currentHourIndex];
 
                 // Determine condition based on cloud cover or just simple logic (not requested, but good to have)
                 // For now, hardcode or simple logic
@@ -53,16 +51,18 @@ export function useDashboardData() {
 
                 const weather = {
                     temperature: currentTemp,
-                    humidity: 65, // Mocked as not fetched
+                    humidity: currentHumidity,
                     condition,
                     windSpeed: currentWind
                 };
 
                 const energyData = normalizeData(weatherRes.hourly, aqiRes.hourly);
+                const forecast = normalizeForecast(weatherRes.daily);
 
                 setData({
                     weather,
-                    energyData
+                    energyData,
+                    forecast
                 });
             } catch (err) {
                 console.error("Failed to fetch data, using fallback:", err);
@@ -74,17 +74,16 @@ export function useDashboardData() {
                         condition: 'Partly Cloudy',
                         windSpeed: 15
                     },
-                    energyData: generateMockData()
+                    energyData: generateMockData(),
+                    forecast: [] // Empty forecast for mock fallback
                 });
-                // We don't set error state here to allow the UI to show mock data instead of error screen
-                // But maybe we should show a toast? For now, just fallback as requested.
             } finally {
                 setLoading(false);
             }
         };
 
         fetchData();
-    }, []);
+    }, [coordinates.lat, coordinates.long]);
 
     return { data, loading, error };
 }
