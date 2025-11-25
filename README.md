@@ -8,9 +8,9 @@
 EcoPulse is a real-time intelligence dashboard that correlates local weather conditions with environmental impact metrics. It visualizes the inverse relationship between **Solar Generation Potential** and **Air Quality Index (AQI)**, proving that renewable energy availability often correlates with better environmental conditions.
 
 ### 📸 Gallery
-| Dark Mode | Correlation Analysis |
-|-----------|----------------------|
-| ![Dark Mode](public/assets/dashboard-dark.png) | ![Correlation](public/assets/dashboard-correlation.png) |
+| Light Mode | Correlation Analysis |
+|------------|----------------------|
+| ![Light Mode](public/assets/dashboard-light.png) | ![Correlation](public/assets/dashboard-correlation.png) |
 
 Designed to demonstrate robust handling of asynchronous data streams, complex state management, and data visualization in Next.js.
 
