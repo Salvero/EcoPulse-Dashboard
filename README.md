@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EcoPulse Dashboard 🌿
 
-## Getting Started
+**EcoPulse** is a modern, real-time dashboard designed to visualize the correlation between renewable energy production (Solar) and carbon intensity. It demonstrates how clean energy sources directly impact and reduce the carbon footprint of energy consumption.
 
-First, run the development server:
+![EcoPulse Dashboard](https://via.placeholder.com/1200x600?text=EcoPulse+Dashboard+Preview)
+*(Note: Replace with actual screenshot)*
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+-   **Real-Time Monitoring**: Track key environmental metrics including Temperature, Humidity, Wind Speed, and Carbon Intensity.
+-   **Energy Correlation Analysis**: A sophisticated dual-axis chart visualizing the inverse relationship between **Solar Output** (Yellow) and **Carbon Intensity** (Red).
+    -   *Insight*: Observe how Carbon Intensity drops as Solar Output peaks during the day.
+-   **Responsive Design**: Built with a mobile-first approach using TailwindCSS.
+-   **Strict Typing**: Fully typed data layer using TypeScript for reliability.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+-   **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+-   **Language**: [TypeScript](https://www.typescriptlang.org/)
+-   **Styling**: [TailwindCSS](https://tailwindcss.com/)
+-   **Visualization**: [Recharts](https://recharts.org/)
+-   **Icons**: [Lucide React](https://lucide.dev/)
+-   **State/Data**: React Hooks (simulated async data flow)
 
-## Learn More
+## 🏃‍♂️ Getting Started
 
-To learn more about Next.js, take a look at the following resources:
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/Salvero/ecopulse-dashboard.git
+    cd ecopulse-dashboard
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
 
-## Deploy on Vercel
+4.  Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📂 Project Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+-   `app/`: Next.js App Router pages and layouts.
+-   `components/dashboard/`: Reusable dashboard components (StatCards, EnergyChart).
+-   `hooks/`: Custom React hooks for data fetching (`useDashboardData`).
+-   `lib/`: Utilities and mock data generators (`normalize.ts`, `mockData.ts`).
+-   `types/`: TypeScript definitions (`dashboard.ts`).
+
+## 🔮 Future Roadmap
+
+-   [ ] Integration with real-world APIs (Open-Meteo, Carbon Intensity API).
+-   [ ] Historical data analysis with date range pickers.
+-   [ ] Dark mode support.
+-   [ ] Multi-location support.
+
+---
+
+Built with 💚 for a greener future.
