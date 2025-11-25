@@ -18,8 +18,12 @@ export default function DashboardPage() {
   }
 
   // Calculate current stats from the latest data point or defaults
-  const currentEnergy = data?.energyData[data.energyData.length - 1];
-  const currentIntensity = currentEnergy?.carbonIntensity ?? 0;
+  // Logic Update: Find the current hour's index
+  const currentHourISO = new Date().toISOString().slice(0, 13); // Matches "2024-11-25T11"
+  const currentIndex = data?.energyData.findIndex(d => d.timestamp.startsWith(currentHourISO)) ?? -1;
+  const currentEnergy = currentIndex !== -1 && data ? data.energyData[currentIndex] : (data?.energyData[0] ?? null);
+
+  // const currentIntensity = currentEnergy?.carbonIntensity ?? 0; // Removed
   const currentSolar = currentEnergy?.solarOutput ?? 0;
 
   return (
@@ -43,18 +47,22 @@ export default function DashboardPage() {
             trend="neutral"
           />
           <StatCard
-            title="Humidity"
-            value={data?.weather.humidity ?? 0}
-            unit="%"
+            title="Wind Speed"
+            value={data?.weather.windSpeed ?? 0}
+            unit="km/h"
             loading={loading}
-            trend="up"
+            trend="neutral"
           />
           <StatCard
-            title="Carbon Intensity"
-            value={currentIntensity}
-            unit="gCO2/kWh"
+            title="Air Quality (AQI)"
+            value={data?.energyData[data.energyData.length - 1]?.airQualityIndex ?? 0}
+            unit="US AQI"
             loading={loading}
             trend="down"
+            status={
+              (data?.energyData[data.energyData.length - 1]?.airQualityIndex ?? 0) < 50 ? 'good' :
+                (data?.energyData[data.energyData.length - 1]?.airQualityIndex ?? 0) < 100 ? 'moderate' : 'critical'
+            }
           />
           <StatCard
             title="Solar Output"
@@ -62,6 +70,7 @@ export default function DashboardPage() {
             unit="W/m²"
             loading={loading}
             trend="up"
+            status={currentSolar === 0 ? 'inactive' : undefined}
           />
         </div>
 

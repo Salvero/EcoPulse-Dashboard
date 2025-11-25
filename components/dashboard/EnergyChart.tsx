@@ -22,7 +22,7 @@ export function EnergyChart({ data }: EnergyChartProps) {
             <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={data}>
                     <defs>
-                        <linearGradient id="colorCarbon" x1="0" y1="0" x2="0" y2="1">
+                        <linearGradient id="colorAQI" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8} />
                             <stop offset="95%" stopColor="#ef4444" stopOpacity={0.1} />
                         </linearGradient>
@@ -33,13 +33,22 @@ export function EnergyChart({ data }: EnergyChartProps) {
                         stroke="#888"
                         fontSize={12}
                         tickLine={false}
+                        tickFormatter={(value) => {
+                            // Value is ISO string "2024-11-25T10:00"
+                            // Return "10:00"
+                            try {
+                                return value.split('T')[1].slice(0, 5);
+                            } catch {
+                                return value;
+                            }
+                        }}
                     />
-                    {/* Left Y-Axis: Carbon Intensity */}
+                    {/* Left Y-Axis: Air Quality Index */}
                     <YAxis
                         yAxisId="left"
                         stroke="#ef4444"
                         fontSize={12}
-                        label={{ value: 'Carbon Intensity (gCO2/kWh)', angle: -90, position: 'insideLeft', fill: '#ef4444' }}
+                        label={{ value: 'Air Quality Index (US AQI)', angle: -90, position: 'insideLeft', fill: '#ef4444' }}
                     />
                     {/* Right Y-Axis: Solar Output */}
                     <YAxis
@@ -52,15 +61,27 @@ export function EnergyChart({ data }: EnergyChartProps) {
                     <Tooltip
                         contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e5e7eb' }}
                         labelStyle={{ color: '#374151', fontWeight: 'bold' }}
+                        formatter={(value: number, name: string) => {
+                            if (name === 'Air Quality Index') return [`${value} AQI`, name];
+                            if (name === 'Solar Output') return [`${value} W/m²`, name];
+                            return [value, name];
+                        }}
+                        labelFormatter={(label) => {
+                            try {
+                                return label.split('T')[1].slice(0, 5);
+                            } catch {
+                                return label;
+                            }
+                        }}
                     />
                     <Legend />
 
                     <Area
                         yAxisId="left"
                         type="monotone"
-                        dataKey="carbonIntensity"
-                        name="Carbon Intensity"
-                        fill="url(#colorCarbon)"
+                        dataKey="airQualityIndex"
+                        name="Air Quality Index"
+                        fill="url(#colorAQI)"
                         stroke="#ef4444"
                         strokeWidth={2}
                     />

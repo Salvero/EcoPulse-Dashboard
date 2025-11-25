@@ -1,6 +1,6 @@
 export interface DashboardDataPoint {
     timestamp: string;      // "10:00"
-    carbonIntensity: number; // gCO2/kWh (The bad stuff)
-    solarOutput: number;     // W/m² (The good stuff)
+    airQualityIndex: number; // US AQI (0-500)
+    solarOutput: number;     // W/m²
     isForecast: boolean;     // To style future data differently
 }
