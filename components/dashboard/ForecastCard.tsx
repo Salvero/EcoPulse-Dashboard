@@ -22,14 +22,16 @@ export function ForecastCard({ forecast = [] }: ForecastCardProps) {
     return (
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 h-full transition-colors">
             <h3 className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-4">5-Day Forecast</h3>
-            <div className="flex items-center justify-between">
+            <div className="space-y-4">
                 {forecast.length > 0 ? (
                     forecast.map((d, i) => {
                         const Icon = getIcon(d.icon);
                         return (
-                            <div key={i} className="flex flex-col items-center gap-2">
-                                <span className="text-slate-500 text-xs font-medium uppercase">{d.dayName}</span>
-                                <Icon className="w-8 h-8 text-slate-400 dark:text-slate-200" />
+                            <div key={i} className="flex items-center justify-between p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-lg transition-colors">
+                                <div className="flex items-center gap-3">
+                                    <span className="text-slate-500 text-xs font-medium uppercase w-8">{d.dayName}</span>
+                                    <Icon className="w-6 h-6 text-slate-400 dark:text-slate-200" />
+                                </div>
                                 <span className="text-slate-700 dark:text-slate-300 text-sm font-bold">{d.tempMax}°</span>
                             </div>
                         );
