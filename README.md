@@ -1,8 +1,8 @@
-# EcoPulse - Real-Time Environmental Intelligence Dashboard
+# EcoPulse - AI Energy Analytics Platform
 
 **Live Demo:** [https://ecopulse-dashboard.netlify.app/](https://ecopulse-dashboard.netlify.app/)
 
-![EcoPulse Dashboard](public/assets/dashboard-light-main.png)
+![EcoPulse - AI Energy Analytics Platform](public/assets/dashboard-light-main.png)
 
 ## ⚡ Overview
 EcoPulse is a real-time intelligence dashboard that correlates local weather conditions with environmental impact metrics. It visualizes the inverse relationship between **Solar Generation Potential** and **Air Quality Index (AQI)**, proving that renewable energy availability often correlates with better environmental conditions.

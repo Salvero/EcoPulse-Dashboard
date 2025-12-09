@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EcoPulse",
+  title: "EcoPulse - AI Energy Analytics Platform",
   description: "Real-time environmental intelligence dashboard",
   icons: {
     icon: "/favicon.svg",

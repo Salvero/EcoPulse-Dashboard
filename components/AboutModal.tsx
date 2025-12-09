@@ -17,7 +17,7 @@ export function AboutModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                 {/* Content */}
                 <div className="p-6 space-y-6">
                     <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                        EcoPulse is a real-time environmental intelligence dashboard correlating solar generation potential with air quality indices.
+                        EcoPulse is an AI-powered energy analytics platform that combines real-time data visualization with intelligent forecasting to optimize energy consumption.
                     </p>
                     {/* Tech Stack List */}
                     <div className="space-y-3">
