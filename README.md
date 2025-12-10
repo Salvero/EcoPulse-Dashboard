@@ -83,6 +83,7 @@ EcoPulse-Dashboard/
 ├── public/               # Static Assets
 ├── PRD.md                # Product Requirements Document
 └── README.md             # You are here
+```
 
 ## 📦 Running Locally
 
@@ -92,11 +93,11 @@ EcoPulse-Dashboard/
    pip install -r requirements.txt
    python main.py
    ```
-
 2. Start the Frontend
    ```bash
    npm install
    npm run dev
    ```
+```
 
-Built by Salman | ![View Portfolio](https://github.com/Salvero)
+Built by Salman | [View Portfolio](https://github.com/Salvero)
