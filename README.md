@@ -6,7 +6,7 @@
 
 **Live Demo:** [https://ecopulse-dashboard.netlify.app/](https://ecopulse-dashboard.netlify.app/)
 
-[![EcoPulse Dashboard Preview](/public/assets/dashboard-light-main.png)](https://ecopulse-dashboard.netlify.app/)
+[![EcoPulse Dashboard Preview](/public/screenshots/dashboard-dark.png)](https://ecopulse-dashboard.netlify.app/)
 
 ## ⚡ Overview
 
@@ -45,21 +45,35 @@ Initial benchmarks showed that loading the TensorFlow/Keras model on every API r
 
 ## 📸 Frontend Feature Showcase
 
-### 1. Dual-Axis Correlation Analysis
-Visualizes the complex inverse relationship between **Solar Generation (Yellow)** and **Air Quality Index (Red)**.
+### 1. Real-Time Live Telemetry
+The dashboard features **auto-connecting WebSocket streaming** that displays live energy metrics without requiring user interaction.
+* Dynamic wave-pattern data visualization for impressive, organic-looking graphs
+* Real-time Usage, Solar, and Grid dependency metrics with status indicators
+
+### 2. Dual-Axis Correlation Analysis
+Visualizes the complex inverse relationship between **Solar Generation (Cyan)** and **Air Quality Index (Red)**.
 * **Problem:** These datasets come from disparate streams (Weather API vs AQI API) with different array structures.
 * **Solution:** Implemented a **Normalization Layer** in TypeScript to zip streams by timestamp, ensuring accurate X-Axis synchronization.
 
-### 2. Timezone-Aware Processing
-The dashboard automatically detects the target region's timezone (America/Toronto) and aligns the UI to match.
-* **Solution:** Custom hour-matching logic ensures "Current Conditions" always reflect the actual solar hour, preventing "Midnight Data" from appearing at noon.
+### 3. Multi-City Energy Tracking
+Switch between 5 global cities (Toronto, New York, London, Tokyo, Sydney) with unique colorful icons for each location.
 
-### 3. Light & Dark Mode Support
+### 4. Light & Dark Mode Support
 Seamlessly switches between themes with a persistent, system-aware preference toggle, demonstrating attention to UX and accessibility.
 
-| Light Mode | Dark Mode |
+| Dark Mode | Light Mode |
 | :--- | :--- |
-| ![Light Mode](/public/assets/dashboard-light-main.png) | ![Dark Mode](/public/assets/dashboard-dark-mode.png) |
+| ![Dark Mode](/public/screenshots/dashboard-dark.png) | ![Light Mode](/public/screenshots/dashboard-light.png) |
+
+---
+
+## 📱 Mobile Responsive Design
+
+The dashboard is fully optimized for mobile devices with a responsive layout that adapts to any screen size.
+
+| Mobile View 1 | Mobile View 2 |
+| :--- | :--- |
+| ![Mobile 1](/public/screenshots/mobile-1.png) | ![Mobile 2](/public/screenshots/mobile-2.png) |
 
 ---
 
@@ -76,7 +90,7 @@ Seamlessly switches between themes with a persistent, system-aware preference to
 EcoPulse-Dashboard/
 ├── app/                  # Next.js Frontend (Pages & Layouts)
 ├── components/           # Reusable UI Components (Charts, Widgets)
-├── backend/              # [NEW] Python AI Engine & API
+├── backend/              # Python AI Engine & API
 │   ├── main.py           # FastAPI Entry Point
 │   ├── models/           # Pre-trained .h5 LSTM Models
 │   └── requirements.txt  # Python Dependencies
@@ -98,4 +112,7 @@ EcoPulse-Dashboard/
    npm install
    npm run dev
    ```
+
+---
+
 Built by Salman | [View Portfolio](https://github.com/Salvero)
